@@ -40,11 +40,11 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // 2. Refresh the session
-  const { data: { session } } = await supabase.auth.getSession()
+  // 2. Validate the user by calling the auth server (getUser is reliable, getSession is not)
+  const { data: { user } } = await supabase.auth.getUser()
 
-  // 3. Protection Logic: If NO session and trying to access /admin/dashboard
-  if (!session && request.nextUrl.pathname.startsWith('/admin/dashboard')) {
+  // 3. Protection Logic: If NO user and trying to access /admin/dashboard
+  if (!user && request.nextUrl.pathname.startsWith('/admin/dashboard')) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin'
     return NextResponse.redirect(url)

@@ -12,22 +12,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [unauthorized, setUnauthorized] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | undefined>('');
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      // Use getUser() instead of getSession() — validates with the auth server
+      const { data: { user }, error } = await supabase.auth.getUser();
 
-      if (error || !session) {
+      if (error || !user) {
         router.push('/admin');
         return;
-      }
-
-      // Check if the logged-in user matches the admin email in config
-      if (session.user.email !== SHOP_CONFIG.adminEmail) {
-        setUnauthorized(true);
-        setUserEmail(session.user.email);
       }
 
       setLoading(false);
@@ -50,33 +43,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <p className="text-gray-500 font-medium">Loading...</p>
-      </div>
-    );
-  }
-
-  if (unauthorized) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 border border-gray-100 text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
-          <p className="text-gray-600 mb-6">
-            You are logged in as <strong>{userEmail}</strong>, which does not have admin access for {SHOP_CONFIG.name}.
-          </p>
-          <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm text-left mb-6">
-            <p className="mb-2"><strong>Quick Fix:</strong></p>
-            <ol className="list-decimal pl-4 space-y-1">
-              <li>Log out using the button below.</li>
-              <li>Log back in using the correct admin email: <strong>{SHOP_CONFIG.adminEmail}</strong></li>
-            </ol>
-            <p className="mt-4 text-xs">Or, update `SHOP_CONFIG.adminEmail` in `lib/config.ts` to match your new email.</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="w-full py-3 bg-gray-900 text-white font-bold rounded-lg transition-opacity hover:opacity-90"
-          >
-            Log Out
-          </button>
-        </div>
       </div>
     );
   }

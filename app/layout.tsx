@@ -3,12 +3,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import { Toast } from "@/components/Toast";
+import { Toaster } from "react-hot-toast";
 import { SHOP_CONFIG } from "@/lib/config";
 
-// Load the Inter font (clean, modern sans‑serif)
-const inter = Inter({ subsets: ["latin"] });
+// Load the Inter font (clean, modern sans‑serif) — swap prevents invisible text during load
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 // Set the page title and description for SEO / browser tabs
 export const metadata: Metadata = {
@@ -36,14 +35,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* Navbar appears on every page */}
-        <Navbar />
 
-        {/* Page‑specific content (homepage, cart, etc.) */}
+        {/* Page‑specific content (homepage, cart, admin, etc.) */}
         {children}
 
         {/* Global Toast Notification */}
-        <Toast />
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            style: {
+              background: '#333',
+              color: '#fff',
+              borderRadius: '10px',
+            },
+            success: {
+              iconTheme: { primary: '#4ade80', secondary: '#fff' },
+            },
+          }}
+        />
       </body>
     </html>
   );

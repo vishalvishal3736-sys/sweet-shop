@@ -14,11 +14,21 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Optional: Check if user is already logged in and redirect to dashboard
+  // On mobile: always require fresh login (sign out any stale session)
+  // On desktop: auto-redirect if already logged in
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        // Always sign out on mobile so admin must re-enter credentials
+        await supabase.auth.signOut();
+        return;
+      }
+
+      // Desktop: check if already logged in and redirect
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
         router.push('/admin/dashboard');
       }
     };
@@ -53,11 +63,11 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 border border-gray-100">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center p-3 sm:p-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-5 sm:p-8 border border-gray-100">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h1>
-          <p className="text-gray-500 text-sm">Sign in to manage {SHOP_CONFIG.name}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Login</h1>
+          <p className="text-gray-500 text-xs sm:text-sm">Sign in to manage {SHOP_CONFIG.name}</p>
         </div>
 
         {error && (
@@ -77,7 +87,8 @@ export default function AdminLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              placeholder="admin@omsweets.in"
+              placeholder="admin@girishsweets.in"
+              autoComplete="email"
               required
             />
           </div>
@@ -93,6 +104,7 @@ export default function AdminLogin() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="••••••••"
+              autoComplete="current-password"
               required
             />
           </div>
@@ -100,7 +112,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 text-white font-bold rounded-lg transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 text-white font-bold rounded-lg transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none"
             style={{ backgroundColor: SHOP_CONFIG.themeColor }}
           >
             {loading ? 'Logging in...' : 'Login'}
@@ -109,7 +121,7 @@ export default function AdminLogin() {
 
         {/* Optional hint for demo purposes – remove in production */}
         <p className="text-xs text-center text-gray-400 mt-6">
-          Use the email: {SHOP_CONFIG.adminEmail} and your Supabase password.
+          Use your admin email and Supabase password.
         </p>
       </div>
     </div>

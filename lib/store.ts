@@ -2,14 +2,14 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { CartItem } from './types';
 
-// Define the shape of a cart item
-export interface CartItem {
-  id: string;          // Unique product ID (from Supabase)
-  name: string;        // Product name
-  price: number;       // Price per unit
-  quantity: number;    // Number of units (e.g., 0.5 for half kg, 10 for pieces)
-  unit: string;        // Unit type (kg, piece, dozen, etc.) – for display
+// Re-export CartItem for convenience
+export type { CartItem };
+
+// Helper to round to 2 decimal places and avoid floating point issues
+function round2(n: number): number {
+  return Math.round((n + Number.EPSILON) * 100) / 100;
 }
 
 // Define the store state and actions
@@ -17,6 +17,7 @@ interface CartState {
   items: CartItem[];
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getTotal: () => number;
 }
@@ -38,7 +39,7 @@ export const useCartStore = create<CartState>()(
           set({
             items: currentItems.map((item) =>
               item.id === newItem.id
-                ? { ...item, quantity: item.quantity + newItem.quantity }
+                ? { ...item, quantity: round2(item.quantity + newItem.quantity) }
                 : item
             ),
           });
@@ -52,12 +53,26 @@ export const useCartStore = create<CartState>()(
       removeItem: (id) =>
         set({ items: get().items.filter((item) => item.id !== id) }),
 
+      // Update the quantity of a specific item
+      updateQuantity: (id, quantity) => {
+        if (quantity <= 0) {
+          // Remove the item if quantity hits zero
+          set({ items: get().items.filter((item) => item.id !== id) });
+        } else {
+          set({
+            items: get().items.map((item) =>
+              item.id === id ? { ...item, quantity: round2(quantity) } : item
+            ),
+          });
+        }
+      },
+
       // Empty the cart
       clearCart: () => set({ items: [] }),
 
-      // Calculate the total price of all items in the cart
+      // Calculate the total price of all items in the cart (rounded to avoid floating point)
       getTotal: () =>
-        get().items.reduce((total, item) => total + item.price * item.quantity, 0),
+        round2(get().items.reduce((total, item) => total + round2(item.price * item.quantity), 0)),
     }),
     {
       // Name of the storage key (used in localStorage)
