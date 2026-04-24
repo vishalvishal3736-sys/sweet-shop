@@ -23,21 +23,30 @@ const FALLBACK_PRODUCTS = [
 
 export default async function Home() {
   // 1. Fetch products that are in stock
-  const { data: products, error } = await supabaseServer
-    .from('products')
-    .select('*')
-    .eq('is_out_of_stock', false)
-    .order('created_at', { ascending: false });
+  let products = null;
+  let fetchError = null;
+  try {
+    const { data, error } = await supabaseServer
+      .from('products')
+      .select('*')
+      .eq('is_out_of_stock', false)
+      .order('created_at', { ascending: false });
+    products = data;
+    fetchError = error;
+  } catch (err) {
+    console.error('Exception fetching products:', err);
+    fetchError = err;
+  }
 
   // 2. Handle potential fetch error gracefully — use fallback data
-  if (error) {
-    console.error('Error fetching products:', error.message);
+  if (fetchError) {
+    console.error('Error fetching products, falling back to sample data');
   }
 
   // 3. Use real products if available, fallback sample data if DB is down, or empty state
-  const displayProducts = (products && products.length > 0) ? products : (error ? FALLBACK_PRODUCTS : []);
+  const displayProducts = (products && products.length > 0) ? products : (fetchError ? FALLBACK_PRODUCTS : []);
   const showProducts = displayProducts.length > 0;
-  const showEmptyState = !error && (!products || products.length === 0);
+  const showEmptyState = !fetchError && (!products || products.length === 0);
   const showErrorState = false; // Never show error state — we always have fallback data
 
   // 4. Build JSON-LD structured data for SEO
