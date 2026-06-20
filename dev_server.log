@@ -1,0 +1,21 @@
+
+> sweet-shop-template@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 1205ms
+Supabase URL or Anon Key is missing. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file.
+Error fetching products, falling back to sample data
+ GET / 200 in 794ms (compile: 362ms, render: 432ms)
+⨯ upstream image response failed for https://images.unsplash.com/photo-1593708602862-cf4594d27c17?q=80&w=800 404
+⨯ upstream image response failed for https://images.unsplash.com/photo-1623934199716-bc044bbbd39c?q=80&w=800 404
+⨯ upstream image response failed for https://images.unsplash.com/photo-1541088514152-332e18585c57?q=80&w=800 404
+⨯ upstream image response failed for https://images.unsplash.com/photo-1589119634710-0906231a473c?q=80&w=800 404
+⨯ upstream image response failed for https://images.unsplash.com/photo-1601050690597-df056fb1ce24?q=80&w=800 404
+ GET /cart 200 in 93ms (compile: 56ms, render: 37ms)
+✓ Compiled in 513ms

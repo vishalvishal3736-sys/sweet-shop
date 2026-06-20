@@ -9,9 +9,7 @@ import { SHOP_CONFIG } from '@/lib/config';
 import { supabase } from '@/lib/supabase';
 import toast from 'react-hot-toast';
 import Navbar from '@/components/Navbar';
-import dynamic from 'next/dynamic';
 
-const BalloonBackground = dynamic(() => import('@/components/BalloonBackground'), { ssr: false });
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
@@ -247,7 +245,6 @@ export default function CartPage() {
       <>
         <Navbar />
         {/* Floating balloons background (User Interface Only) */}
-        <BalloonBackground />
         <div className="min-h-[70vh] flex flex-col items-center justify-center p-4">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
           <p className="text-gray-500 mb-8">Looks like you haven&apos;t added any sweets yet!</p>
@@ -274,7 +271,6 @@ export default function CartPage() {
       <Navbar />
 
       {/* Floating balloons background (User Interface Only) */}
-      <BalloonBackground />
 
       {/* Confirmation Dialog Overlay */}
       {showConfirmDialog && (
