@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { SHOP_CONFIG, PRODUCT_CATEGORIES } from '@/lib/config';
-import { Trash2, PackagePlus, Edit2, CheckCircle, XCircle, Image as ImageIcon, Search } from 'lucide-react';
+import { Trash2, PackagePlus, Edit2, CheckCircle, XCircle, Image as ImageIcon, Search, Plus, Minus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { Product } from '@/lib/types';
 
@@ -261,6 +261,19 @@ export default function AdminDashboard() {
     }
   }
 
+  async function adjustStock(id: string, currentStock: number, step: number) {
+    const newStock = Math.max(0, currentStock + step);
+    const { error } = await supabase
+      .from('products')
+      .update({ quantity_available: newStock })
+      .eq('id', id);
+
+    if (error) toast.error('Error updating stock: ' + error.message);
+    else {
+      setProducts(prev => prev.map(p => p.id === id ? { ...p, quantity_available: newStock } : p));
+    }
+  }
+
   // Loading skeleton
   if (loading) {
     return (
@@ -305,6 +318,11 @@ export default function AdminDashboard() {
     );
   }
 
+  // Compute stock alerts
+  const outOfStockCount = products.filter(p => p.is_out_of_stock || p.quantity_available < p.min_quantity).length;
+  const lowStockProducts = products.filter(p => !(p.is_out_of_stock || p.quantity_available < p.min_quantity) && p.quantity_available <= p.min_quantity * 3);
+  const lowStockCount = lowStockProducts.length;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
@@ -322,6 +340,24 @@ export default function AdminDashboard() {
           />
         </div>
       </div>
+
+      {(outOfStockCount > 0 || lowStockCount > 0) && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-amber-800 text-xs sm:text-sm shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-base">⚠️</span>
+            <span>
+              <strong>Inventory Alerts:</strong> {outOfStockCount > 0 && `${outOfStockCount} item(s) Out of Stock`}
+              {outOfStockCount > 0 && lowStockCount > 0 && ' | '}
+              {lowStockCount > 0 && `${lowStockCount} item(s) Running Low`}
+            </span>
+          </div>
+          {lowStockCount > 0 && (
+            <span className="text-[10px] sm:text-xs font-semibold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-md max-w-xs truncate">
+              Low: {lowStockProducts.map(p => p.name).join(', ')}
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="grid md:grid-cols-3 gap-4 sm:gap-8 items-start">
         {/* Add/Edit Product Form — NOT sticky on mobile to prevent overlap */}
@@ -509,8 +545,25 @@ export default function AdminDashboard() {
                     <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5 truncate flex flex-wrap gap-y-1 items-center">
                       <span className="text-red-600 bg-red-50 px-2 py-0.5 rounded-full text-xs mr-2">{product.category || 'Sweets'}</span>
                       <span className="mr-3">{SHOP_CONFIG.currency}{product.price} / {product.unit}</span>
-                      <span className="text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold">
+                      <span className="text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5">
                         Stock: {product.quantity_available} {product.unit}
+                        <span className="flex gap-0.5 border-l pl-1.5 border-gray-300">
+                          <button
+                            onClick={() => adjustStock(product.id, product.quantity_available, -(product.step_interval || 1))}
+                            disabled={product.quantity_available <= 0}
+                            className="p-0.5 hover:text-red-600 disabled:opacity-30 cursor-pointer transition-colors"
+                            title="Decrease Stock"
+                          >
+                            <Minus size={10} />
+                          </button>
+                          <button
+                            onClick={() => adjustStock(product.id, product.quantity_available, (product.step_interval || 1))}
+                            className="p-0.5 hover:text-green-600 cursor-pointer transition-colors"
+                            title="Increase Stock"
+                          >
+                            <Plus size={10} />
+                          </button>
+                        </span>
                       </span>
                     </p>
                   </div>
