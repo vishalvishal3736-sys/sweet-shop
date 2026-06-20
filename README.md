@@ -54,10 +54,6 @@ A modern, responsive, and user-friendly e-commerce platform for Girish Sweets, s
 
 5. Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-## 🔐 Admin Access
-
-The admin dashboard is located at /admin.
-
 - **Admin Email**: admin@girishsweets.in
 - **Management**: Authentication and user credentials are managed via the **Supabase Dashboard** under the **Authentication** section. To set or reset the password for the admin account, use the Supabase Auth UI.
 
