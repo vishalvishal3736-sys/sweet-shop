@@ -26,6 +26,7 @@ export default function AdminDashboard() {
   const [category, setCategory] = useState('Sweets');
   const [stepInterval, setStepInterval] = useState('1');
   const [minQuantity, setMinQuantity] = useState('1');
+  const [quantityAvailable, setQuantityAvailable] = useState('0');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -166,7 +167,8 @@ export default function AdminDashboard() {
         price: parseFloat(price),
         unit,
         step_interval: parseFloat(stepInterval),
-        min_quantity: parseFloat(minQuantity)
+        min_quantity: parseFloat(minQuantity),
+        quantity_available: parseFloat(quantityAvailable)
       };
       if (imageUrl) updateData.image_url = imageUrl;
 
@@ -187,7 +189,8 @@ export default function AdminDashboard() {
           unit,
           image_url: imageUrl,
           step_interval: parseFloat(stepInterval),
-          min_quantity: parseFloat(minQuantity)
+          min_quantity: parseFloat(minQuantity),
+          quantity_available: parseFloat(quantityAvailable)
         },
       ]);
       if (error) toast.error('Error adding product: ' + error.message);
@@ -207,6 +210,7 @@ export default function AdminDashboard() {
     setUnit(product.unit);
     setStepInterval(product.step_interval?.toString() || '1');
     setMinQuantity(product.min_quantity?.toString() || '1');
+    setQuantityAvailable(product.quantity_available?.toString() || '0');
     setImageFile(null);
     setImagePreview(product.image_url);
     // Scroll to top to see form
@@ -221,6 +225,7 @@ export default function AdminDashboard() {
     setUnit('kg');
     setStepInterval('1');
     setMinQuantity('1');
+    setQuantityAvailable('0');
     setImageFile(null);
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -386,23 +391,23 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               <div>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="price" className="block text-[11px] sm:text-xs font-bold text-gray-700 mb-1">
                   Price ({SHOP_CONFIG.currency})
                 </label>
                 <input
                   id="price" type="number" step="0.01" min="0" value={price} onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+                  className="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-xs sm:text-sm"
                   placeholder="400" required
                 />
               </div>
 
               <div>
-                <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                <label htmlFor="unit" className="block text-[11px] sm:text-xs font-bold text-gray-700 mb-1">Unit</label>
                 <select
                   id="unit" value={unit} onChange={(e) => setUnit(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white"
+                  className="w-full px-1.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white text-xs sm:text-sm"
                 >
                   <option value="kg">kg</option>
                   <option value="piece">Piece</option>
@@ -411,6 +416,17 @@ export default function AdminDashboard() {
                   <option value="250g">250g</option>
                   <option value="500g">500g</option>
                 </select>
+              </div>
+
+              <div>
+                <label htmlFor="quantityAvailable" className="block text-[11px] sm:text-xs font-bold text-red-800 mb-1">
+                  Stock Qty
+                </label>
+                <input
+                  id="quantityAvailable" type="number" step="0.01" min="0" value={quantityAvailable} onChange={(e) => setQuantityAvailable(e.target.value)}
+                  className="w-full px-2 py-2 border border-red-200 bg-red-50 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-xs sm:text-sm text-red-900 font-medium"
+                  placeholder="10" required
+                />
               </div>
             </div>
 
@@ -490,9 +506,12 @@ export default function AdminDashboard() {
                         </span>
                       )}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5 truncate">
+                    <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5 truncate flex flex-wrap gap-y-1 items-center">
                       <span className="text-red-600 bg-red-50 px-2 py-0.5 rounded-full text-xs mr-2">{product.category || 'Sweets'}</span>
-                      {SHOP_CONFIG.currency}{product.price} / {product.unit}
+                      <span className="mr-3">{SHOP_CONFIG.currency}{product.price} / {product.unit}</span>
+                      <span className="text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold">
+                        Stock: {product.quantity_available} {product.unit}
+                      </span>
                     </p>
                   </div>
                 </div>

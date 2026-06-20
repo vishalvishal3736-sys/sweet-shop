@@ -11,6 +11,7 @@ export interface Product {
     is_out_of_stock: boolean;
     step_interval: number;
     min_quantity: number;
+    quantity_available: number;
     created_at: string;
     updated_at?: string;
 }
@@ -23,6 +24,7 @@ export interface CartItem {
     unit: string;        // Unit type (kg, piece, dozen, etc.) – for display
     step_interval: number; // Step size for quantity controls
     min_quantity: number;  // Minimum allowed quantity
+    quantity_available: number; // Stock availability limit
 }
 
 export interface OrderItem {

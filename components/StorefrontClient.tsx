@@ -15,6 +15,7 @@ interface Product {
     category?: string;
     image_url: string | null;
     is_out_of_stock: boolean;
+    quantity_available: number;
     step_interval?: number;
     min_quantity?: number;
 }
@@ -96,6 +97,8 @@ export default function StorefrontClient({ products }: { products: Product[] }) 
                             imageUrl={product.image_url}
                             step_interval={product.step_interval}
                             min_quantity={product.min_quantity}
+                            is_out_of_stock={product.is_out_of_stock}
+                            quantity_available={product.quantity_available}
                         />
                     ))}
                 </div>

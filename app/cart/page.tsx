@@ -336,8 +336,16 @@ export default function CartPage() {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + (item.step_interval || 1))}
-                      className="p-2.5 text-gray-500 hover:text-red-600 active:text-red-600 transition-colors cursor-pointer select-none"
+                      onClick={() => {
+                        const nextQty = item.quantity + (item.step_interval || 1);
+                        if (nextQty > item.quantity_available) {
+                          toast.error(`Only ${item.quantity_available} ${item.unit} available in stock.`);
+                        } else {
+                          updateQuantity(item.id, nextQty);
+                        }
+                      }}
+                      disabled={item.quantity >= item.quantity_available}
+                      className="p-2.5 text-gray-500 hover:text-red-600 active:text-red-600 transition-colors cursor-pointer select-none disabled:opacity-30 disabled:hover:text-gray-500"
                       aria-label={`Increase ${item.name} quantity`}
                     >
                       <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

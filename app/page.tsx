@@ -8,25 +8,24 @@ export const revalidate = 60;
 
 // Fallback sample products shown when Supabase is unreachable
 const FALLBACK_PRODUCTS = [
-  { id: 'sample-1', name: 'Kaju Katli', price: 600, unit: '500g', category: 'Sweets', image_url: '/images/kaju_katli.png', is_out_of_stock: false, created_at: '2025-01-01' },
-  { id: 'sample-2', name: 'Gulab Jamun', price: 350, unit: '1kg', category: 'Sweets', image_url: '/images/gulab_jamun.png', is_out_of_stock: false, created_at: '2025-01-02' },
-  { id: 'sample-3', name: 'Rasgulla', price: 300, unit: '1kg', category: 'Sweets', image_url: '/images/rasgulla.png', is_out_of_stock: false, created_at: '2025-01-03' },
-  { id: 'sample-4', name: 'Soan Papdi', price: 250, unit: '500g', category: 'Sweets', image_url: '/images/soan_papdi.png', is_out_of_stock: false, created_at: '2025-01-04' },
-  { id: 'sample-5', name: 'Aloo Bhujia', price: 200, unit: '500g', category: 'Namkeen', image_url: '/images/aloo_bhujia.png', is_out_of_stock: false, created_at: '2025-01-05' },
-  { id: 'sample-6', name: 'Moong Dal', price: 220, unit: '500g', category: 'Namkeen', image_url: '/images/moong_dal.png', is_out_of_stock: false, created_at: '2025-01-06' },
-  { id: 'sample-7', name: 'Sugar-Free Barfi', price: 500, unit: '250g', category: 'Sugar-Free', image_url: '/images/sugar_free_barfi.png', is_out_of_stock: false, created_at: '2025-01-07' },
-  { id: 'sample-8', name: 'Dry Fruit Laddu', price: 450, unit: '500g', category: 'Festive Specials', image_url: '/images/dry_fruit_laddu.png', is_out_of_stock: false, created_at: '2025-01-08' },
+  { id: 'sample-1', name: 'Kaju Katli', price: 600, unit: '500g', category: 'Sweets', image_url: '/images/kaju_katli.png', is_out_of_stock: false, quantity_available: 15, created_at: '2025-01-01' },
+  { id: 'sample-2', name: 'Gulab Jamun', price: 350, unit: '1kg', category: 'Sweets', image_url: '/images/gulab_jamun.png', is_out_of_stock: false, quantity_available: 2, created_at: '2025-01-02' },
+  { id: 'sample-3', name: 'Rasgulla', price: 300, unit: '1kg', category: 'Sweets', image_url: '/images/rasgulla.png', is_out_of_stock: false, quantity_available: 0, created_at: '2025-01-03' },
+  { id: 'sample-4', name: 'Soan Papdi', price: 250, unit: '500g', category: 'Sweets', image_url: '/images/soan_papdi.png', is_out_of_stock: false, quantity_available: 20, created_at: '2025-01-04' },
+  { id: 'sample-5', name: 'Aloo Bhujia', price: 200, unit: '500g', category: 'Namkeen', image_url: '/images/aloo_bhujia.png', is_out_of_stock: false, quantity_available: 1.5, created_at: '2025-01-05' },
+  { id: 'sample-6', name: 'Moong Dal', price: 220, unit: '500g', category: 'Namkeen', image_url: '/images/moong_dal.png', is_out_of_stock: false, quantity_available: 0, created_at: '2025-01-06' },
+  { id: 'sample-7', name: 'Sugar-Free Barfi', price: 500, unit: '250g', category: 'Sugar-Free', image_url: '/images/sugar_free_barfi.png', is_out_of_stock: true, quantity_available: 12, created_at: '2025-01-07' },
+  { id: 'sample-8', name: 'Dry Fruit Laddu', price: 450, unit: '500g', category: 'Festive Specials', image_url: '/images/dry_fruit_laddu.png', is_out_of_stock: false, quantity_available: 5, created_at: '2025-01-08' },
 ];
 
 export default async function Home() {
-  // 1. Fetch products that are in stock
+  // 1. Fetch all products (in-stock and out-of-stock are handled client-side)
   let products = null;
   let fetchError = null;
   try {
     const { data, error } = await supabaseServer
       .from('products')
       .select('*')
-      .eq('is_out_of_stock', false)
       .order('created_at', { ascending: false });
     products = data;
     fetchError = error;
