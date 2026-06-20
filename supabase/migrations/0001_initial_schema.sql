@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS public.shop_settings (
 
 -- Basic row data for settings (id = 1)
 INSERT INTO public.shop_settings (id, whatsapp_number) 
-VALUES (1, '918619418106')
+VALUES (1, '999999XXXX')
 ON CONFLICT (id) DO NOTHING;
 
 -- Enable RLS on shop_settings

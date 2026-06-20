@@ -2,7 +2,7 @@
 
 export const SHOP_CONFIG = {
   // The name of the shop – appears in the header, meta tags, etc.
-  name: "Girish Sweets Sweets Shop",
+  name: "The Sweets Shop",
 
   // Currency symbol used throughout the site.
   currency: "₹",
@@ -12,7 +12,7 @@ export const SHOP_CONFIG = {
 
   // Fallback WhatsApp number in case the database setting isn't loaded yet.
   // Format: country code + number (no + or spaces).
-  fallbackWhatsAppNumber: "918619418106",
+  fallbackWhatsAppNumber: "999999XXXX",
 };
 
 // Centralized product categories – used in the admin dashboard and storefront

@@ -1,4 +1,4 @@
-# 🏪 Girish Sweets Sweets Shop
+# 🏪 The Sweets Shop
 
 [![Next.js](https://img.shields.io/badge/Framework-Next.js%2015-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![Supabase](https://img.shields.io/badge/Database-Supabase-blueviolet?style=flat-square&logo=supabase)](https://supabase.com/)
@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS%204-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-A modern, highly-responsive, and visually stunning e-commerce web application built for **Girish Sweets Sweets Shop**, specializing in premium authentic Indian sweets, namkeen, and festive treats. Customers can easily browse products by category, manage a dynamic shopping cart, and place orders directly to the store via WhatsApp integration.
+A modern, highly-responsive, and visually stunning e-commerce web application built for **The Sweets Shop**, specializing in premium authentic Indian sweets, namkeen, and festive treats. Customers can easily browse products by category, manage a dynamic shopping cart, and place orders directly to the store via WhatsApp integration.
 
 ---
 
@@ -33,74 +33,75 @@ A modern, highly-responsive, and visually stunning e-commerce web application bu
 
 ---
 
-## 🏁 Getting Started
+## 🏁 Step-by-Step Personal Setup & Database Configuration
 
-### Prerequisites
+Follow these comprehensive steps to clone the repository and connect it to your own Supabase project:
 
-Ensure you have the following installed on your machine:
+### 1. Prerequisites
+Ensure you have the following installed locally:
 - [Node.js](https://nodejs.org/) (v18.0.0 or higher)
 - npm, yarn, pnpm, or bun package manager
+- A free account on [Supabase](https://supabase.com/)
 
-### Local Installation
+### 2. Local Installation
+Clone the repository and install all dependencies:
+```bash
+git clone https://github.com/vishalvishal3736-sys/sweet-shop.git
+cd sweet-shop
+npm install
+```
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/vishalvishal3736-sys/sweet-shop.git
-   cd sweet-shop
-   ```
+### 3. Create a Supabase Project
+1. Log into your [Supabase Dashboard](https://supabase.com/dashboard) and click **New Project**.
+2. Set a project name, choose a database password, select the nearest hosting region, and click **Create New Project**.
+3. Wait a few minutes for the database instance to spin up.
 
-2. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
+### 4. Database Schema Setup
+To build the required database tables (`products`, `orders`, `shop_settings`) and set up Row Level Security (RLS) policies:
+1. In your Supabase Project Sidebar, click on the **SQL Editor** icon.
+2. Click **New query**.
+3. Copy the SQL statements from each migration script located in the `supabase/migrations/` folder, paste them into the SQL editor, and run them sequentially from **0001 to 0008**.
+4. *(Optional)* To populate your storefront with the default sweet items, open a new SQL editor query, paste the contents of `supabase/seed_products.sql`, and run it.
 
-3. **Configure Environment Variables:**
-   Create a `.env.local` file in the root directory and insert your Supabase project parameters:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anonymous-key
-   ```
+### 5. Setup Storage Bucket (Product Images)
+To allow the admin panel to upload images:
+1. Navigate to the **Storage** tab in your Supabase dashboard.
+2. Click **New bucket**.
+3. Enter `product-images` as the bucket name.
+4. **Important:** Enable the **Public** toggle so that customers can view the images without needing authentication.
+5. Storage RLS policies (from `supabase/migrations/0007_storage_bucket.sql`) will automatically govern security once created.
 
-4. **Launch the Development Server:**
-   ```bash
-   npm run dev
-   ```
+### 6. Admin Authentication Credentials
+To log into the `/admin` portal:
+1. Go to the **Authentication** tab in your Supabase dashboard.
+2. Under the **Users** section, click **Add User** -> **Create User**.
+3. Enter the email `admin@sweetshop.com` (or any other custom email) and specify a secure password.
+4. Ensure the **Confirm User** toggle is checked (so that no email verification is required), then click **Create User**.
 
-5. **Access the Application:**
-   Open [http://localhost:3000](http://localhost:3000) in your web browser.
+### 7. Configure Environment Variables
+Create a file named `.env.local` in the root of your project directory and add your unique project API parameters:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anonymous-key
+```
+*Note: You can retrieve these values in Supabase under **Project Settings** -> **API**.*
+
+### 8. Run the App
+Launch the development server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to see your personal storefront, and go to `/admin` to log into your dashboard!
 
 ---
 
-## 🗄️ Database & Storage Setup (Supabase)
+## 📱 Mobile Compatibility & Camera Uploads
 
-To link this application to your personal database instance:
-
-1. **Create a Supabase Project:**
-   Register and launch a new project on [supabase.com](https://supabase.com/).
-
-2. **Database Migrations:**
-   Run the SQL scripts located under `supabase/migrations/` sequentially (0001 through 0008) inside the **Supabase SQL Editor** to construct the tables (`products`, `orders`, `shop_settings`) and initialize Row-Level Security (RLS) policies.
-
-3. **Storage Bucket Setup:**
-   - Navigate to the **Storage** tab in your Supabase dashboard.
-   - Create a new public bucket named `product-images`.
-   - Set the bucket privacy to **Public**.
-   - Make sure storage policies allow read access to all users, and write/delete privileges to authenticated users (refer to `supabase/migrations/0007_storage_bucket.sql`).
-
-4. **Seed Sample Data:**
-   Run the contents of `supabase/seed_products.sql` in the **SQL Editor** to populate your storefront with authentic product items and local image paths.
-
----
-
-## 🔐 Admin Dashboard Access
-
-The administrative dashboard can be accessed by navigating to `/admin`.
-
-> [!IMPORTANT]
-> **Admin Credentials & Authentication**
-> - **Authorized Email:** `admin@girishsweets.in`
-> - **Authentication Method:** This project utilizes **Supabase Auth` for administration security. To set up or reset the login password, navigate to the **Authentication** section on your **Supabase Dashboard**, select **Add User** or **Reset Password** for the email `admin@girishsweets.in`.
-> - **Rogue Policies Check:** Migrations have been updated so that any authenticated account (such as `admin@girishsweets.in`) can safely edit products and manage settings once logged in.
+This application is built with mobile-first responsiveness in mind:
+- **Responsive Layout**: Designed to display a 2-column product grid on smaller screens and automatically expand to 3 or 4 columns on desktops.
+- **Horizontal Categories Swiping**: Swipe through product categories easily on mobile touchscreens.
+- **Mobile Admin Sidebar**: Includes a responsive slide-out hamburger navigation menu for the admin page.
+- **Direct Camera Photo Uploads**: Tapping the upload area in the admin panel on a mobile device automatically prompts the operating system to offer options for opening the **Camera** to capture a fresh photo, or selecting from the **Photo Library**. Uploaded images are automatically compressed on-device using the HTML5 Canvas API before sending them to Supabase to save network bandwidth.
 
 ---
 
