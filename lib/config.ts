@@ -2,7 +2,7 @@
 
 export const SHOP_CONFIG = {
   // The name of the shop – appears in the header, meta tags, etc.
-  name: "sweet shop",
+  name: "Girish Sweets Sweets Shop",
 
   // Currency symbol used throughout the site.
   currency: "₹",

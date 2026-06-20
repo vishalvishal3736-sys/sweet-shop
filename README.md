@@ -1,12 +1,12 @@
-# sweet shop
+# Girish Sweets Sweets Shop
 
-A modern, responsive, and user-friendly e-commerce platform for sweet shop, specializing in authentic Indian sweets and namkeen. This application allows customers to browse products, manage a shopping cart, and place orders directly via WhatsApp.
+A modern, responsive, and user-friendly e-commerce platform for Girish Sweets, specializing in authentic Indian sweets and namkeen. This application allows customers to browse products, manage a shopping cart, and place orders directly via WhatsApp.
 
 ## 🚀 Features
 
 - **Storefront**: Clean and intuitive interface for browsing sweets and snacks.
 - **Product Categories**: Easy filtering by categories like Sweets, Namkeen, Sugar-Free, and more.
-- **WhatsApp Integration**: Seamless checkout process where orders are sent directly to the shop's WhatsApp.
+- **WhatsApp Integration**: seamless checkout process where orders are sent directly to the shop's WhatsApp.
 - **Admin Dashboard**: Secure area for shop owners to manage products, view orders, and update shop settings.
 - **Responsive Design**: Optimized for mobile, tablet, and desktop devices.
 - **Real-time Updates**: Powered by Supabase for instant data synchronization.
@@ -32,7 +32,7 @@ A modern, responsive, and user-friendly e-commerce platform for sweet shop, spec
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd sweets-shop
+   cd girish-sweets
    ```
 
 2. Install dependencies:
@@ -54,36 +54,16 @@ A modern, responsive, and user-friendly e-commerce platform for sweet shop, spec
 
 5. Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-## 🗄️ Database Setup (Supabase)
-
-To use this project personally, you need to set up your own Supabase project:
-
-1. **Create a Supabase Project**: Go to [supabase.com](https://supabase.com/) and create a new project.
-2. **Run Migrations**: Open the **SQL Editor** in your Supabase dashboard and run the scripts found in `supabase/migrations/` in order (0001 to 0008). This will create the necessary tables (products, orders, shop_settings) and set up Row Level Security (RLS) policies.
-3. **Storage Bucket**:
-   - Go to **Storage** in Supabase.
-   - Create a new public bucket named `product-images`.
-   - Ensure the RLS policies for storage allow public read access and authenticated upload/delete (refer to `supabase/migrations/0007_storage_bucket.sql`).
-4. **Seed Data (Optional)**: Run the script in `supabase/seed_products.sql` to populate your shop with initial items.
-
-## 🔐 Admin Access
-
-The admin dashboard is located at /admin.
-
-- **Admin Email**: admin@sweetshop.com (You can change this in the database or during initial setup).
-- **Management**: Authentication and user credentials are managed via the **Supabase Dashboard** under the **Authentication** section. Create a user with the admin email and set a password.
+- **Admin Email**: admin@girishsweets.in
+- **Management**: Authentication and user credentials are managed via the **Supabase Dashboard** under the **Authentication** section. To set or reset the password for the admin account, use the Supabase Auth UI.
 
 ## 📁 Project Structure
 
 - app/: Next.js App Router pages and layouts.
 - components/: Reusable UI components.
 - lib/: Utility functions, configurations, and Supabase client.
-- public/: Static assets.
+- public/: Static assets like images and fonts.
 - supabase/: Database migrations and seed scripts.
-
-## 📱 Mobile Compatibility
-
-The site is fully responsive and optimized for mobile devices. The admin panel supports mobile photo uploads directly from your phone's camera or gallery when adding new products.
 
 ## 📄 License
 
