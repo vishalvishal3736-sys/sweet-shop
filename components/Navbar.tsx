@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, User } from 'lucide-react';
+import { ShoppingCart, User, Info } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { SHOP_CONFIG } from '@/lib/config';
 
